@@ -1,9 +1,8 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Sep  3 13:53:14 2020
+Created on Mon Oct 12 15:48:08 2020
 
-@author: noahbrauer
+@author: noahb
 """
 
 import matplotlib.pyplot as plt
@@ -28,7 +27,7 @@ import pyart
 
 #Read in file
 
-file = 'ncswp_SR1_20200827_011704.017_v125_s000_160.0_RHI_.nc'
+file = 'ncswp_SR1_20200827_043447.563_v177_s000_160.0_RHI_.nc'
 
 #Import file
 
@@ -73,7 +72,7 @@ for i in range(0,len(elevation)):
 #Average over each column
     
     
-s_avg = np.nanmean(s, axis = 0)    
+   
 
 
 #Now let's plot        
@@ -81,53 +80,30 @@ s_avg = np.nanmean(s, axis = 0)
 label_size = 20    
 tick_label_declutter = 200
 
-height_1d = height[:,1]
-#Round s and h values to the nearest decimal place:
 
-#s_rounded = np.around(s_avg,decimals = 1)
 
     
 fig,ax = plt.subplots(figsize=(14,14))
-plt.contourf(s/1000,height, zh, extend = 'both', cmap = 'pyart_NWSRef', levels = np.arange(5,70,step = 2.5))
+plt.contourf(s/1000,height/1000, zh, extend = 'both', cmap = 'pyart_NWSRef', levels = np.arange(5,70,step = 2.5))
 cbar = plt.colorbar()
 cbar.ax.tick_params(labelsize = label_size)
 cbar.set_label(label = '[dBZ]',size = label_size)
 plt.xlabel('Distance from Radar (km)', size = label_size)
-plt.ylim(0,14000)
+plt.ylabel('Altitude (km)', size = label_size)
 
-#Need to plot x-ticks every 25 km from the radar
-#Loop through s_avg to determine which value in array is divislbe by 25 (as an integer)
-#If yes, store to array called xticks_25km
+xlabels = np.arange(0,200,25)
+ylabels = np.arange(0,11,1)
 
+plt.ylim(0,12)
 
-xticks_25km = []
+plt.xticks(xlabels, size = label_size)
+plt.yticks(ylabels, size = label_size)
 
-
-#for i in range(len(s_avg)):
-    
-    
-    
-    
-    
-    
-    
-    
-
-
-
-
-
-plt.xticks(s_avg[::tick_label_declutter]/1000,s_avg[::tick_label_declutter]/1000, size = label_size)
-ax.set_xticklabels(s_avg[::tick_label_declutter]/1000)
-ax.xaxis.set_major_formatter(FormatStrFormatter('%d'))
-
-plt.yticks(height_1d[::tick_label_declutter], height_1d[::tick_label_declutter])
-ax.set_yticklabels(height_1d[::tick_label_declutter])
-plt.title(r'SMART-R2 $160^{o}$ Azimuth $Z_{H}$ 8/27 0117 UTC', size = label_size)
+plt.title(r'SMART-R1 $160^{o}$ Azimuth $Z_{H}$ 8/27 0434 UTC', size = label_size)
 plt.show()
 
 
-
+#%%
 
 fig,ax = plt.subplots(figsize=(14,14))
 plt.contourf(s/1000,height, zdr-2.5, extend = 'both', cmap = 'pyart_NWSRef', levels = np.arange(0,6,step = 0.25))
@@ -143,7 +119,7 @@ ax.xaxis.set_major_formatter(FormatStrFormatter('%d'))
 
 plt.yticks(height_1d[::tick_label_declutter], height_1d[::tick_label_declutter])
 ax.set_yticklabels(height_1d[::tick_label_declutter])
-plt.title(r'SMART-R2 $160^{o}$ Azimuth $Z_{DR}$ 8/27 0117 UTC', size = label_size)
+plt.title(r'SMART-R1 $160^{o}$ Azimuth $Z_{DR}$ 8/27 0434 UTC', size = label_size)
 plt.show()
 
 
@@ -175,19 +151,3 @@ print(np.nanmax(zh))
 print(np.nanmax(zdr))
 print(np.nanmax(rho_hv))
 print(np.nanmax(kdp))
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
