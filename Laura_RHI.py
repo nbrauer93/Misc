@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Oct 12 15:48:08 2020
-
-@author: noahb
-"""
-
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
 import numpy as np
@@ -91,10 +85,10 @@ cbar.set_label(label = '[dBZ]',size = label_size)
 plt.xlabel('Distance from Radar (km)', size = label_size)
 plt.ylabel('Altitude (km)', size = label_size)
 
-xlabels = np.arange(0,200,25)
+xlabels = np.arange(0,175,25)
 ylabels = np.arange(0,11,1)
 
-plt.ylim(0,12)
+plt.ylim(0,10)
 
 plt.xticks(xlabels, size = label_size)
 plt.yticks(ylabels, size = label_size)
@@ -104,50 +98,91 @@ plt.show()
 
 
 #%%
-
 fig,ax = plt.subplots(figsize=(14,14))
-plt.contourf(s/1000,height, zdr-2.5, extend = 'both', cmap = 'pyart_NWSRef', levels = np.arange(0,6,step = 0.25))
+plt.contourf(s/1000,height/1000, zdr-2.5, extend = 'both', cmap = 'pyart_NWSRef', levels = np.arange(0,6,step = 0.25))
 cbar = plt.colorbar()
 cbar.ax.tick_params(labelsize = label_size)
 cbar.set_label(label = '[dB]',size = label_size)
 plt.xlabel('Distance from Radar (km)', size = label_size)
-plt.ylim(0,14000)
-plt.xticks(s_avg[::tick_label_declutter]/1000,s_avg[::tick_label_declutter]/1000, size = label_size)
-ax.set_xticklabels(s_avg[::tick_label_declutter]/1000)
-ax.xaxis.set_major_formatter(FormatStrFormatter('%d'))
+plt.ylabel('Altitude (km)', size = label_size)
+
+xlabels = np.arange(0,175,25)
+ylabels = np.arange(0,11,1)
+
+plt.ylim(0,10)
+
+plt.xticks(xlabels, size = label_size)
+plt.yticks(ylabels, size = label_size)
 
 
-plt.yticks(height_1d[::tick_label_declutter], height_1d[::tick_label_declutter])
-ax.set_yticklabels(height_1d[::tick_label_declutter])
+
 plt.title(r'SMART-R1 $160^{o}$ Azimuth $Z_{DR}$ 8/27 0434 UTC', size = label_size)
 plt.show()
 
 
 
+fig,ax = plt.subplots(figsize=(14,14))
+plt.contourf(s/1000,height/1000, kdp, extend = 'both', cmap = 'pyart_NWSRef', levels = np.arange(0,4,step = 0.2))
+cbar = plt.colorbar()
+cbar.ax.tick_params(labelsize = label_size)
+cbar.set_label(label = '[deg/km]',size = label_size)
+plt.xlabel('Distance from Radar (km)', size = label_size)
+plt.ylabel('Altitude (km)', size = label_size)
 
+xlabels = np.arange(0,175,25)
+ylabels = np.arange(0,11,1)
+
+plt.ylim(0,10)
+
+plt.xticks(xlabels, size = label_size)
+plt.yticks(ylabels, size = label_size)
+
+
+
+plt.title(r'SMART-R1 $160^{o}$ Azimuth $K_{DP}$ 8/27 0434 UTC', size = label_size)
+plt.show()
+
+
+#%%
 
     
 fig,ax = plt.subplots(figsize=(14,14))
-plt.contourf(s/1000,height, rho_hv, extend = 'both', cmap = 'pyart_NWSRef', levels = np.arange(0.9,1.05,step = 0.001))
+plt.contourf(s/1000,height/1000, rho_hv, extend = 'both', cmap = 'pyart_NWSRef', levels = np.arange(0.9,1.05,step = 0.01))
 cbar = plt.colorbar()
 cbar.ax.tick_params(labelsize = label_size)
 cbar.set_label(label = r'[$\rho_{hv}$]',size = label_size)
 plt.xlabel('Distance from Radar (km)', size = label_size)
-plt.ylim(0,14000)
-plt.xticks(s_avg[::tick_label_declutter]/1000,s_avg[::tick_label_declutter]/1000, size = label_size)
-ax.set_xticklabels(s_avg[::tick_label_declutter]/1000)
-ax.xaxis.set_major_formatter(FormatStrFormatter('%d'))
+plt.ylabel('Altitude (km)', size = label_size)
+
+xlabels = np.arange(0,175,25)
+ylabels = np.arange(0,11,1)
+
+plt.ylim(0,10)
+
+plt.xticks(xlabels, size = label_size)
+plt.yticks(ylabels, size = label_size)
 
 
-plt.yticks(height_1d[::tick_label_declutter], height_1d[::tick_label_declutter])
-ax.set_yticklabels(height_1d[::tick_label_declutter])
+
+plt.title(r'SMART-R1 $160^{o}$ Azimuth $\rho_{hv}$ 8/27 0434 UTC', size = label_size)
 plt.show()
 
 
 
 
 
-print(np.nanmax(zh))
-print(np.nanmax(zdr))
-print(np.nanmax(rho_hv))
-print(np.nanmax(kdp))
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
