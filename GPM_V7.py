@@ -23,7 +23,7 @@ DPR = h5py.File(file, 'r')
 #nscan is the nummber of scans in each granule 
 #nray is the number of angle bins in each  scan; think of these as footprint scans (5 km in diameter for each footprint)
 #nbin is the number of range bins in each ray (angle bins)
-#nDSD: Parameters are N0 (number concentration) and D0 (mean drop diameter)
+#nDSD: Parameters are log_{10}(N_{w}) (number concentration) and D0 (mean drop diameter)
 
 
 lat = DPR['FS']['Latitude'][:,:]    
