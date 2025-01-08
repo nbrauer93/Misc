@@ -1,0 +1,113 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Jan  8 10:41:34 2025
+
+@author: noahbrauer
+"""
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pygrib
+import cartopy
+import cartopy.feature as cfeature
+import cartopy.crs as ccrs
+import cartopy.io.shapereader as shpreader
+import pyart
+
+
+
+
+
+fileQPE_1 = 'MRMS_RadarOnly_QPE_15M_00.00_20240426-234500.grib2'
+fileQPE_2 = 'MRMS_RadarOnly_QPE_15M_00.00_20240427-000000.grib2'
+file_rotation = 'MRMS_RotationTrackML30min_00.50_20240426-235800.grib2'
+
+#Now unpack the files and extract data
+
+grbs_qpe1 = pygrib.open(fileQPE_1)
+grbs_qpe2 = pygrib.open(fileQPE_2)
+grbs_rot = pygrib.open(file_rotation)
+
+grb_qpe1 = grbs_qpe1.select()[0]
+grb_qpe2 = grbs_qpe2.select()[0]
+grb_rot = grbs_rot.select()[0]
+
+data_qpe1 = grb_qpe1.values
+data_qpe2 = grb_qpe2.values
+data_rot = grb_rot.values
+
+
+#NaN out zero values
+
+data_qpe1[data_qpe1<=0] = np.nan
+data_qpe2[data_qpe2<=0] = np.nan
+data_rot[data_rot<=0] = np.nan
+
+
+qpe_total = data_qpe1+data_qpe2
+
+#Downscale rotation array:
+    
+rot_rescale = data_rot[::2,::2]
+#%%
+
+#Now we must create a grid. Shape of MRMS is (3500,7000)
+#Define Lat-Lon coordinates
+
+latitude = np.arange(20.005001,55.005,0.01)
+longitude = np.arange(230.005,300.004998,0.01)
+
+
+#Now mesh lat-lon coordinates to create a grid:
+
+lon2,lat2 = np.meshgrid(longitude,latitude)
+print(lat2.shape)
+print(lon2.shape)
+
+#Find midpoint of lat-lon arrays:
+
+mid_lat = latitude[len(latitude)//2]
+mid_lon = longitude[len(longitude)//2]
+
+print(mid_lat)
+                                            
+#Flip data relative to X-axis
+data_flip = np.flip(qpe_total, axis = 0)
+
+
+
+fig = plt.figure(figsize=(10,10))
+ax = plt.axes(projection = ccrs.PlateCarree())
+ax.add_feature(cfeature.STATES,edgecolor = 'black')
+#ax.set_extent([-90,-70,22,40])
+ax.set_extent([263,268,37,43])
+levels = np.arange(0, 60, 2)  # Interval of 2
+contour = plt.contourf(lon2,lat2,data_flip,levels = levels, transform=ccrs.PlateCarree(),cmap = 'pyart_NWSRef')
+cbar = plt.colorbar(contour, fraction=0.04,extend = 'max')
+cbar.set_label('[mm]', size = 18)
+plt.title('30-min MRMS Radar QPE 4/26 2330-2400 UTC',size = 22)
+plt.show()
+
+
+#%%
+
+           
+#Flip data relative to X-axis
+rot_flip = np.flip(rot_rescale, axis = 0)
+
+
+
+fig = plt.figure(figsize=(10,10))
+ax = plt.axes(projection = ccrs.PlateCarree())
+ax.add_feature(cfeature.STATES,edgecolor = 'black')
+#ax.set_extent([-90,-70,22,40])
+ax.set_extent([263,268,37,43])
+levels = np.arange(0, 60, 2)  # Interval of 2
+contour = plt.contourf(lon2,lat2,data_flip,levels = levels, transform=ccrs.PlateCarree(),cmap = 'pyart_NWSRef')
+contour_rot = plt.contour(lon2,lat2,rot_flip)
+cbar = plt.colorbar(contour, fraction=0.04,extend = 'max')
+cbar.set_label('[mm]', size = 18)
+plt.title('30-min MRMS Radar QPE 4/26 2330-2400 UTC, 3-6 km Rotation',size = 22)
+plt.show()
+
